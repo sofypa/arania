@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Perico Barbinaranja - Visualizador 3D</title>
+  <title>Araña Seda de Oro - Visualizador 3D</title>
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 
 <style>
@@ -64,59 +64,6 @@
     font-size: 11px;
     color: #ccc;
     line-height: 1.4;
-  }
-
-  #audioPanel {
-    margin-top: 10px;
-    background: rgba(0,0,0,0.9);
-    color: white;
-    padding: 15px;
-    border-radius: 8px;
-    display: none;
-  }
-
-  #audioPanel h4 {
-    margin: 0 0 10px 0;
-    color: #4CAF50;
-    font-size: 16px;
-  }
-
-  .audio-controls {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 10px;
-  }
-
-  .audio-controls button {
-    flex: 1;
-    padding: 10px;
-    font-size: 13px;
-    margin: 0;
-  }
-
-  #progressContainer {
-    width: 100%;
-    height: 8px;
-    background: #333;
-    border-radius: 4px;
-    margin: 10px 0;
-    cursor: pointer;
-    position: relative;
-    touch-action: none;
-  }
-
-  #progressBar {
-    height: 100%;
-    background: #4CAF50;
-    border-radius: 4px;
-    width: 0%;
-    transition: width 0.1s;
-  }
-
-  #timeDisplay {
-    font-size: 13px;
-    color: #ccc;
-    text-align: center;
   }
 
   .info-buttons {
@@ -229,9 +176,6 @@
   <!-- Fondo -->
   <a-assets>
     <img id="hdr" src="fondoblur.jpg">
-    
-    <!-- Sonido del periquito -->
-    <audio id="sound-periquito" src="sounds/periquito.mp3" preload="auto"></audio>
   </a-assets>
   <a-sky src="#hdr"></a-sky>
 
@@ -239,10 +183,10 @@
   <a-light type="ambient" intensity="0.6"></a-light>
   <a-light type="directional" intensity="1" position="2 4 2"></a-light>
 
-  <!-- Modelo del Periquito (FIJO) -->
+  <!-- Modelo de la Araña (FIJO) -->
   <a-entity
     id="modelo"
-    gltf-model="models/periquito.glb"
+    gltf-model="models/arana.glb"
     position="0 0 0"
     scale="5 5 5"
     rotation="0 180 0">
@@ -374,13 +318,13 @@
 </script>
 
 <script>
-  // Información del Perico Barbinaranja
+  // Información de la Araña Seda de Oro
   const animal = {
-    nombre: "Perico Barbinaranja",
-    descripcion: "Es un ave sociable que vive en bandadas y habita en diversos entornos, desde bosques y sabanas hasta parques urbanos. Se alimenta en ramas expuestas y anida en cavidades, ya sean recuperadas o excavadas por él mismo.",
-    habitat: "Habita en tierras bajas húmedas, especialmente en la vertiente del Pacífico, prefiriendo bordes de bosque, áreas abiertas con arbustos y árboles altos, y zonas urbanas como pueblos y jardines, buscando árboles en flor o fruto, a menudo junto a otras especies de pericos.",
-    alimentacion: "Se alimenta principalmente de frutas como mango, guayaba, manzana y mandarina, semillas de sauco, alpiste, linaza y espino, y también consume flores y plantas locales como la Cecropia.",
-    conservacion: "No está globalmente amenazado y se considera de Preocupación Menor (LC) por la UICN, siendo común a abundante en la mayor parte de su rango, incluyendo Panamá, aunque su población disminuye y enfrenta comercio ilegal y captura de pichones para el mercado de mascotas."
+    nombre: "Araña Seda de Oro",
+    descripcion: "Es una araña inofensiva conocida por producir una de las sedas biológicas más resistentes del mundo. Su hilo tiene un brillo dorado bajo el sol, cualidad que se aprovecha en lugares como Indonesia para confeccionar textiles.",
+    habitat:  "Se encuentra desde Estados Unidos hasta Argentina. Se pueden encontrar en ambientes tropicales, donde la temperatura y humedad son altas, tejen la telaraña. Es común encontrarlas entre los espacios de los árboles y en postes de luz.",
+    alimentacion: "Se alimenta de saltamontes, escarabajos, moscas y otros pequeños insectos voladores como libélulas. Esto es muy beneficioso para los seres humanos, porque ayuda a controlar plagas.",
+    conservacion: "No está en riesgo de extinción; se considera de "Preocupación Menor (Least Concern)" por la UICN, debido a su común hábitat en América y porque se adapta bien a parques y jardines."
   };
 
   let infoActiva = null;
@@ -457,125 +401,16 @@
     }
   }
 
-  // Función para reproducir sonido
-  let audioActual = null;
-  let isPlaying = false;
-
-  function reproducirSonido() {
-    const sound = document.querySelector('#sound-periquito');
-    
-    if (sound) {
-      audioActual = sound;
-      audioActual.play().catch(err => {
-        console.log('Error al reproducir sonido:', err);
-      });
-      
-      isPlaying = true;
-      mostrarPanelAudio();
-      actualizarBotonPlay();
-    }
-  }
-
-  function mostrarPanelAudio() {
-    const panel = document.getElementById('audioPanel');
-    document.getElementById('audioTitle').textContent = `🔊 ${animal.nombre}`;
-    panel.style.display = 'block';
-  }
-
-  function ocultarPanelAudio() {
-    document.getElementById('audioPanel').style.display = 'none';
-    if (audioActual) {
-      audioActual.pause();
-      audioActual.currentTime = 0;
-      isPlaying = false;
-      actualizarBotonPlay();
-    }
-  }
-
-  function togglePlayPause() {
-    if (!audioActual) return;
-    
-    if (isPlaying) {
-      audioActual.pause();
-      isPlaying = false;
-    } else {
-      audioActual.play();
-      isPlaying = true;
-    }
-    actualizarBotonPlay();
-  }
-
-  function rebobinarAudio() {
-    if (!audioActual) return;
-    audioActual.currentTime = Math.max(0, audioActual.currentTime - 5);
-  }
-
-  function actualizarBotonPlay() {
-    const btn = document.getElementById('playPauseBtn');
-    if (btn) {
-      btn.textContent = isPlaying ? '⏸️ Pausar' : '▶️ Reproducir';
-    }
-  }
-
-  function formatTime(seconds) {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  }
-
-  // Actualizar barra de progreso
-  setInterval(() => {
-    if (audioActual && isPlaying) {
-      const progress = (audioActual.currentTime / audioActual.duration) * 100;
-      document.getElementById('progressBar').style.width = progress + '%';
-      
-      const currentTime = formatTime(audioActual.currentTime);
-      const duration = formatTime(audioActual.duration || 0);
-      document.getElementById('timeDisplay').textContent = `${currentTime} / ${duration}`;
-      
-      // Si terminó el audio
-      if (audioActual.currentTime >= audioActual.duration) {
-        isPlaying = false;
-        actualizarBotonPlay();
-      }
-    }
-  }, 100);
-
-  // Click en barra de progreso para saltar (mouse y touch)
-  function clickProgress(e) {
-    if (!audioActual) return;
-    
-    const container = document.getElementById('progressContainer');
-    const rect = container.getBoundingClientRect();
-    const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-    const percent = (clientX - rect.left) / rect.width;
-    audioActual.currentTime = percent * audioActual.duration;
-  }
-
-  // Soporte táctil para la barra de progreso
+  // Inicializar información al cargar la página
   document.addEventListener('DOMContentLoaded', () => {
-    const progressContainer = document.getElementById('progressContainer');
-    
-    progressContainer.addEventListener('touchstart', e => {
-      e.preventDefault();
-      clickProgress(e);
-    }, { passive: false });
-
-    progressContainer.addEventListener('touchmove', e => {
-      e.preventDefault();
-      clickProgress(e);
-    }, { passive: false });
-    
-    // Inicializar información
     mostrarAnimal();
   });
 </script>
 
 <div id="ui">
-  <div id="animalTitle">Perico Barbinaranja</div>
+  <div id="animalTitle">🕷️ Araña Seda de Oro</div>
 
   <button onclick="togglePanel()">ℹ️ Información</button>
-  <button onclick="reproducirSonido()">🔊 Sonido</button>
 
   <div id="panel" style="display: none;">
     <h3 id="titulo"></h3>
@@ -593,22 +428,6 @@
       <strong>PC:</strong> WASD: Mover | Arrastrar: Rotar | Rueda: Zoom<br>
       <strong>Móvil:</strong> Deslizar: Rotar | Pinch: Zoom
     </div>
-  </div>
-
-  <div id="audioPanel">
-    <h4 id="audioTitle">🔊 Audio</h4>
-    
-    <div class="audio-controls">
-      <button onclick="rebobinarAudio()">⏪ -5s</button>
-      <button id="playPauseBtn" onclick="togglePlayPause()">⏸️ Pausar</button>
-      <button onclick="ocultarPanelAudio()">❌ Cerrar</button>
-    </div>
-    
-    <div id="progressContainer" onclick="clickProgress(event)">
-      <div id="progressBar"></div>
-    </div>
-    
-    <div id="timeDisplay">0:00 / 0:00</div>
   </div>
 </div>
 
