@@ -201,6 +201,63 @@
     line-height: 1.4;
   }
 
+  /* Notificación inicial de instrucciones */
+  #notificacionInicial {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.95);
+    color: #333;
+    padding: 25px 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    z-index: 10000;
+    max-width: 90%;
+    width: 400px;
+    text-align: center;
+  }
+
+  #notificacionInicial h3 {
+    margin: 0 0 15px 0;
+    color: #034732;
+    font-size: 20px;
+  }
+
+  #notificacionInicial p {
+    margin: 10px 0;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  #btnEntendido {
+    margin-top: 20px;
+    padding: 12px 30px;
+    background: #469352;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  #btnEntendido:hover {
+    background: #357a3d;
+  }
+
+  /* Overlay oscuro detrás de la notificación */
+  #overlayInicial {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+  }
+
   #audioPanel {
     margin-top: 10px;
     margin-left: auto;
@@ -492,6 +549,18 @@
 
 <body>
 
+<!-- Overlay de la notificación inicial -->
+<div id="overlayInicial"></div>
+
+<!-- Notificación inicial de instrucciones -->
+<div id="notificacionInicial">
+  <h3>📱 Instrucciones de Navegación</h3>
+  <p><strong>PC:</strong> WASD: Mover | Arrastrar: Rotar | Rueda: Zoom</p>
+  <p><strong>Móvil:</strong> Deslizar: Rotar | Pinch: Zoom</p>
+  <p><strong>AR:</strong> Detección de superficies y colocación táctil</p>
+  <button id="btnEntendido" onclick="cerrarNotificacionInicial()">Entendido</button>
+</div>
+
 <!-- Indicador de superficie -->
 <div id="surfaceIndicator"></div>
 
@@ -670,6 +739,16 @@
   let reticleVisible = false;
   let lastHitPose = null;
 
+  // ========================================
+  // NOTIFICACIÓN INICIAL
+  // ========================================
+  function cerrarNotificacionInicial() {
+    const notificacion = document.getElementById('notificacionInicial');
+    const overlay = document.getElementById('overlayInicial');
+    
+    if (notificacion) notificacion.style.display = 'none';
+    if (overlay) overlay.style.display = 'none';
+  }
   // ========================================
   // CONTROL DE ROTACIÓN Y ZOOM (MODO NORMAL)
   // ========================================
